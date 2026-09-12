@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+<!--
+  ═══════════════════════════════════════════════════════════════════
+  🥔 SpudNotes v0.2 — personal notes app
+  Made with 🥔 by DS & Jay
+  Original work. Please don't steal. Or at least credit us if you do.
+  https://nardjay.github.io
+  ═══════════════════════════════════════════════════════════════════
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="DS & Jay">
+<meta name="description" content="SpudNotes 🥔 — a personal notes app built by DS & Jay">
+<meta name="generator" content="SpudNotes v0.2 by DS & Jay">
+<meta name="credit" content="Made with 🥔 by DS & Jay — nardjay.github.io">
+<meta name="theme-color" content="#ff9f43">
+<title>SpudNotes 🥔 v0.2 — by DS & Jay</title>
+<style>
+  /* ═══════════════════════════════════════════════════════════════════
+     SpudNotes v0.2 — stylesheet
+     Made with 🥔 by DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* ---- Theme variables (dark by default) ---- */
+  :root {
+    --bg:        #0d0a07;
+    --bg-2:      #16110c;
+    --bg-3:      #1c130c;
+    --bg-4:      #211810;
+    --border:    #2a1e14;
+    --border-2:  #35261a;
+    --text:      #e8dccb;
+    --text-dim:  #8a745c;
+    --text-faint:#4d3e2e;
+    --accent:    #ff9f43;
+    --accent-2:  #ffb347;
+    --accent-3:  #ffc06b;
+    --green:     #a8d977;
+    --red:       #f48771;
+    --pink:      #ff7ab6;
+    --blue:      #8fb8ff;
+    --purple:    #c08fff;
+    --yellow:    #ffd166;
+    --font-size: 14.5px;
+    --bg-hl:     rgba(255,159,67,.1);
+    --bg-hl-2:   rgba(255,159,67,.06);
+  }
+  body.light {
+    --bg:        #f5f0e8;
+    --bg-2:      #fffaf2;
+    --bg-3:      #f0e8dc;
+    --bg-4:      #e8dcc8;
+    --border:    #d8ccb8;
+    --border-2:  #c8bca8;
+    --text:      #2a1e14;
+    --text-dim:  #7a6858;
+    --text-faint:#a89888;
+    --bg-hl:     rgba(255,159,67,.2);
+    --bg-hl-2:   rgba(255,159,67,.12);
+  }
+  body.sepia {
+    --bg:        #2a1f14;
+    --bg-2:      #32261a;
+    --bg-3:      #3a2c1e;
+    --bg-4:      #42321f;
+    --border:    #4a3826;
+    --border-2:  #5a462e;
+    --text:      #e8d4a8;
+    --text-dim:  #b89868;
+    --text-faint:#7a6248;
+    --bg-hl:     rgba(255,180,100,.12);
+    --bg-hl-2:   rgba(255,180,100,.06);
+  }
+  body.accent-pink   { --accent: #ff7ab6; --accent-2: #ffa0c8; --accent-3: #ffc0dc; }
+  body.accent-green  { --accent: #a8d977; --accent-2: #bce88a; --accent-3: #d0f5a0; }
+  body.accent-blue   { --accent: #8fb8ff; --accent-2: #a8c8ff; --accent-3: #c0d8ff; }
+  body.accent-purple { --accent: #c08fff; --accent-2: #d0a8ff; --accent-3: #e0c0ff; }
+  body.font-sm       { --font-size: 13px; }
+  body.font-lg       { --font-size: 16.5px; }
+  body.font-xl       { --font-size: 18px; }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: var(--font-size);
+    display: flex; flex-direction: column; overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    transition: background .2s, color .2s;
+  }
+
+  /* ══ TOP BAR ══ */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px; flex-wrap: wrap; padding: 10px 18px;
+    background: linear-gradient(180deg, var(--bg-3), var(--bg));
+    border-bottom: 1px solid var(--border); z-index: 20;
+    flex-shrink: 0;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo {
+    font-size: 26px; line-height: 1;
+    filter: drop-shadow(0 0 14px rgba(255,159,67,.5));
+    animation: bob 3.2s ease-in-out infinite;
+    cursor: pointer;
+  }
+  @keyframes bob {
+    0%,100% { transform: translateY(0) rotate(-6deg); }
+    50%     { transform: translateY(-5px) rotate(6deg); }
+  }
+  .brand h1 {
+    margin: 0; font-size: 17px; letter-spacing: .4px;
+    background: linear-gradient(90deg, var(--accent-3), var(--accent));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .brand p { margin: 1px 0 0; font-size: 11px; color: var(--text-dim); }
+  .brand p b { color: var(--accent); font-weight: 600; }
+  .credit {
+    font-size: 11px; color: var(--accent);
+    background: var(--bg-hl-2);
+    border: 1px solid var(--bg-hl);
+    padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+  }
+  .credit b { color: var(--accent-3); font-weight: 700; }
+  .actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  button {
+    font-family: inherit; font-size: 12.5px; font-weight: 600;
+    color: var(--text); background: var(--bg-4);
+    border: 1px solid var(--border-2); border-radius: 8px;
+    padding: 7px 12px; cursor: pointer;
+    transition: .15s ease;
+  }
+  button:hover { background: var(--bg-3); border-color: var(--accent); transform: translateY(-1px); }
+  button:active { transform: translateY(0); }
+  button.primary {
+    background: linear-gradient(180deg, var(--accent), #e8761f);
+    border-color: var(--accent-2); color: #2a1608;
+    box-shadow: 0 3px 14px rgba(255,140,50,.28);
+  }
+  button.primary:hover { filter: brightness(1.1); }
+  button.small { padding: 5px 9px; font-size: 11.5px; }
+  button.icon-btn { padding: 5px 9px; font-size: 13px; line-height: 1; }
+
+  /* ══ LAYOUT ══ */
+  main { flex: 1; display: flex; min-height: 0; position: relative; }
+  .sidebar {
+    width: 300px; flex-shrink: 0;
+    background: var(--bg-2); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; min-height: 0;
+    transition: width .2s;
+  }
+  .sidebar.hidden { display: none; }
+  .editor-pane {
+    flex: 1; display: flex; flex-direction: column; min-height: 0; min-width: 0;
+    background: var(--bg-2);
+  }
+  .editor-pane.hidden { display: none; }
+
+  /* ══ SIDEBAR ══ */
+  .sidebar-top { padding: 10px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .search-input, .filter-input {
+    width: 100%; background: var(--bg-4); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 11px; outline: none; font-family: inherit; font-size: 12.5px;
+  }
+  .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--bg-hl); }
+  .search-input::placeholder { color: var(--text-faint); }
+
+  .toolbar {
+    display: flex; gap: 5px; padding: 8px 12px;
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .toolbar button {
+    padding: 6px 9px; font-size: 11.5px;
+    background: var(--bg-3); border-color: var(--border);
+  }
+  .toolbar button.active {
+    background: linear-gradient(180deg, var(--bg-hl), var(--bg-hl-2));
+    border-color: var(--accent); color: var(--accent);
+  }
+
+  .new-wrap { padding: 8px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .new-wrap button { width: 100%; padding: 9px; font-weight: 700; }
+  .new-row { display: flex; gap: 6px; }
+  .new-row button:first-child { flex: 1; }
+  .new-row button.tpl-btn { flex-shrink: 0; padding: 9px 11px; }
+
+  .note-list {
+    flex: 1; overflow-y: auto; padding: 4px 0;
+    scrollbar-width: thin; scrollbar-color: var(--border-2) transparent;
+  }
+  .note-list::-webkit-scrollbar { width: 8px; }
+  .note-list::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+
+  .note-item {
+    padding: 10px 14px; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: .12s; position: relative;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .note-item:hover { background: var(--bg-3); }
+  .note-item.active {
+    background: linear-gradient(90deg, var(--bg-hl), transparent);
+    border-left-color: var(--accent);
+  }
+  .note-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 5px;
+    background: var(--text-faint);
+  }
+  .note-dot.red    { background: var(--red); }
+  .note-dot.yellow { background: var(--yellow); }
+  .note-dot.green  { background: var(--green); }
+  .note-dot.blue   { background: var(--blue); }
+  .note-dot.pink   { background: var(--pink); }
+  .note-dot.purple { background: var(--purple); }
+
+  .note-body { flex: 1; min-width: 0; }
+  .note-item .title {
+    font-size: 13px; font-weight: 600; color: var(--text);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .note-item.active .title { color: var(--accent-2); }
+  .note-item .preview {
+    font-size: 11.5px; color: var(--text-dim);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    line-height: 1.4; margin-top: 2px;
+  }
+  .note-item .tags-mini {
+    display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap;
+  }
+  .note-item .tags-mini span {
+    font-size: 9.5px; color: var(--accent);
+    background: var(--bg-hl-2); padding: 1px 6px; border-radius: 4px;
+  }
+  .note-item .date {
+    font-size: 10px; color: var(--text-faint);
+    margin-top: 3px;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+  }
+  .note-item .pin {
+    font-size: 12px; flex-shrink: 0;
+    opacity: .8;
+  }
+  .note-item mark {
+    background: var(--bg-hl);
+    color: var(--accent-3);
+    border-radius: 2px; padding: 0 2px;
+  }
+
+  .empty-list {
+    padding: 30px 20px; text-align: center;
+    font-size: 12px; color: var(--text-faint); line-height: 1.7;
+  }
+  .empty-list .big { font-size: 30px; margin-bottom: 8px; opacity: .5; }
+
+  /* ══ EDITOR ══ */
+  .editor-head {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px;
+    background: var(--bg-3); border-bottom: 1px solid var(--border);
+    flex-shrink: 0; flex-wrap: wrap;
+  }
+  .editor-head .spacer { flex: 1; }
+  .saved-indicator {
+    font-size: 11px; color: var(--green);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    transition: opacity .3s; margin-right: 6px;
+  }
+  .editor-head .meta {
+    font-size: 11px; color: var(--text-faint);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    white-space: nowrap;
+  }
+  .color-picker { display: flex; gap: 3px; }
+  .color-picker button {
+    width: 18px; height: 18px; padding: 0;
+    border-radius: 50%; border: 2px solid var(--border-2);
+    cursor: pointer; transition: .15s;
+  }
+  .color-picker button:hover { transform: scale(1.15); }
+  .color-picker button.active { border-color: var(--accent); transform: scale(1.2); }
+
+  .editor-body {
+    flex: 1; display: flex; min-height: 0;
+    position: relative;
+  }
+  .editor-body.preview-on .write-pane { display: none; }
+  .editor-body:not(.preview-on) .preview-pane { display: none; }
+  .editor-body.preview-split .write-pane { display: flex; }
+  .editor-body.preview-split .preview-pane { display: block; }
+
+  .write-pane {
+    flex: 1; display: flex; flex-direction: column; min-height: 0; min-width: 0;
+  }
+  .preview-pane {
+    flex: 1; overflow-y: auto; padding: 20px 28px;
+    background: var(--bg-2); border-left: 1px solid var(--border);
+    color: var(--text); line-height: 1.75;
+    font-size: 14.5px;
+    min-width: 0;
+    scrollbar-width: thin; scrollbar-color: var(--border-2) transparent;
+  }
+  .preview-pane::-webkit-scrollbar { width: 10px; }
+  .preview-pane::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 6px; }
+
+  .preview-pane h1 { font-size: 24px; margin: 14px 0 8px; color: var(--accent-2); }
+  .preview-pane h2 { font-size: 19px; margin: 14px 0 6px; color: var(--accent-3); }
+  .preview-pane h3 { font-size: 16px; margin: 12px 0 5px; }
+  .preview-pane p { margin: 6px 0; }
+  .preview-pane code {
+    background: var(--bg-4); color: var(--accent);
+    padding: 1px 6px; border-radius: 4px;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 12.5px;
+  }
+  .preview-pane pre {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px; overflow-x: auto;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 12.5px; line-height: 1.6; color: var(--green);
+  }
+  .preview-pane pre code { background: transparent; padding: 0; color: inherit; }
+  .preview-pane blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 12px; margin: 8px 0;
+    color: var(--text-dim); font-style: italic;
+  }
+  .preview-pane a { color: var(--accent); text-decoration: underline; }
+  .preview-pane ul, .preview-pane ol { padding-left: 24px; margin: 6px 0; }
+  .preview-pane li { margin: 2px 0; }
+  .preview-pane hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
+  .preview-pane strong { color: var(--accent-3); }
+  .preview-pane em { color: var(--pink); font-style: italic; }
+  .preview-pane input[type="checkbox"] {
+    accent-color: var(--accent); cursor: pointer;
+    transform: scale(1.2); margin-right: 6px;
+  }
+  .preview-pane .tag {
+    background: var(--bg-hl); color: var(--accent);
+    padding: 1px 7px; border-radius: 6px; font-size: 12px;
+  }
+  .preview-pane table {
+    border-collapse: collapse; margin: 8px 0;
+  }
+  .preview-pane th, .preview-pane td {
+    border: 1px solid var(--border); padding: 5px 10px; font-size: 13px;
+  }
+  .preview-pane th { background: var(--bg-3); color: var(--accent-2); }
+
+  #titleInput {
+    background: transparent; border: 0; outline: none;
+    color: var(--accent-2); font-family: inherit;
+    font-size: 22px; font-weight: 700; letter-spacing: -.3px;
+    padding: 18px 24px 6px;
+    flex-shrink: 0;
+  }
+  #titleInput::placeholder { color: var(--text-faint); font-weight: 600; }
+
+  #bodyInput {
+    flex: 1; background: transparent; border: 0; outline: none;
+    color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13.5px; line-height: 1.75;
+    padding: 6px 24px 24px; resize: none;
+    scrollbar-width: thin; scrollbar-color: var(--border-2) transparent;
+    tab-size: 2;
+  }
+  #bodyInput::placeholder { color: var(--text-faint); }
+  #bodyInput::-webkit-scrollbar { width: 10px; }
+  #bodyInput::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 6px; }
+  #bodyInput::selection, #titleInput::selection { background: var(--bg-hl); }
+
+  .stats-bar {
+    display: flex; gap: 14px; padding: 5px 24px 8px;
+    font-size: 11px; color: var(--text-faint);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    flex-shrink: 0; flex-wrap: wrap;
+  }
+  .stats-bar b { color: var(--accent); font-weight: 600; }
+  .stats-bar .warn { color: var(--red); }
+
+  .empty-editor {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 40px; text-align: center;
+    color: var(--text-faint); font-size: 13px; line-height: 1.8;
+  }
+  .empty-editor .big {
+    font-size: 44px; opacity: .4; margin-bottom: 12px;
+    animation: bob 3.2s ease-in-out infinite;
+  }
+  .empty-editor kbd {
+    background: var(--bg-4); color: var(--accent);
+    padding: 1px 6px; border-radius: 4px;
+    border: 1px solid var(--border-2);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 11px;
+  }
+
+  /* ══ FOCUS MODE ══ */
+  body.focus-mode .topbar { display: none; }
+  body.focus-mode .sidebar { display: none; }
+  body.focus-mode .editor-head { opacity: .3; }
+  body.focus-mode .editor-head:hover { opacity: 1; }
+
+  /* ══ TAG FILTER BAR ══ */
+  .tag-bar {
+    display: flex; gap: 5px; padding: 6px 12px; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
+    max-height: 70px; overflow-y: auto;
+  }
+  .tag-bar:empty { display: none; }
+  .tag-chip {
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    background: var(--bg-hl-2); color: var(--accent);
+    border: 1px solid var(--bg-hl);
+    cursor: pointer; font-weight: 500;
+    transition: .15s;
+  }
+  .tag-chip:hover { background: var(--bg-hl); }
+  .tag-chip.active {
+    background: var(--accent); color: #2a1608;
+    border-color: var(--accent-2);
+  }
+
+  /* ══ MODALS ══ */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,.7); backdrop-filter: blur(4px);
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 10vh 16px 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg-2); border: 1px solid var(--border-2);
+    border-radius: 12px; max-width: 520px; width: 100%;
+    max-height: 75vh; display: flex; flex-direction: column;
+    box-shadow: 0 24px 70px rgba(0,0,0,.7);
+    animation: modalIn .18s ease;
+    overflow: hidden;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: translateY(-8px) scale(.98); } to { opacity: 1; transform: none; } }
+  .modal-head {
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    font-size: 14px; font-weight: 700; color: var(--accent-2);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .modal-head .close { margin-left: auto; padding: 2px 8px; font-size: 14px; }
+  .modal-body { padding: 14px 18px; overflow-y: auto; flex: 1; }
+  .modal-foot {
+    padding: 12px 18px; border-top: 1px solid var(--border);
+    display: flex; gap: 8px; justify-content: flex-end;
+  }
+  .modal-foot button { min-width: 80px; }
+
+  /* Quick switcher results */
+  .qs-results { max-height: 50vh; overflow-y: auto; }
+  .qs-item {
+    padding: 9px 14px; cursor: pointer; border-radius: 8px;
+    display: flex; align-items: center; gap: 10px;
+    transition: .12s;
+  }
+  .qs-item:hover, .qs-item.selected {
+    background: var(--bg-hl);
+  }
+  .qs-item .t { flex: 1; font-size: 13.5px; font-weight: 500; }
+  .qs-item .d {
+    font-size: 10.5px; color: var(--text-faint);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+  }
+  .qs-empty {
+    padding: 30px; text-align: center;
+    color: var(--text-faint); font-size: 12.5px;
+  }
+
+  /* Command palette */
+  .cmd-item {
+    padding: 9px 14px; cursor: pointer; border-radius: 8px;
+    display: flex; align-items: center; gap: 10px;
+    transition: .12s;
+  }
+  .cmd-item:hover, .cmd-item.selected { background: var(--bg-hl); }
+  .cmd-item .ico { font-size: 15px; width: 22px; text-align: center; }
+  .cmd-item .t { flex: 1; font-size: 13.5px; }
+  .cmd-item .k {
+    font-size: 10.5px; color: var(--text-faint);
+    background: var(--bg-4); padding: 2px 7px; border-radius: 4px;
+    border: 1px solid var(--border);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  /* Find & replace */
+  .fr-input {
+    width: 100%; background: var(--bg-4); color: var(--text);
+    border: 1px solid var(--border); border-radius: 7px;
+    padding: 8px 11px; outline: none; font-family: inherit; font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .fr-input:focus { border-color: var(--accent); }
+  .fr-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .fr-row label { font-size: 12px; color: var(--text-dim); }
+  .fr-info { font-size: 11.5px; color: var(--text-faint); margin-top: 8px; }
+
+  /* Settings modal */
+  .setting-group { margin-bottom: 18px; }
+  .setting-group h4 {
+    margin: 0 0 8px; font-size: 12px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: .8px;
+    font-weight: 700;
+  }
+  .setting-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+  }
+  .setting-row label { flex: 1; font-size: 13px; }
+  .setting-row .val {
+    font-size: 11.5px; color: var(--accent);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+  }
+  .theme-btns, .size-btns, .accent-btns {
+    display: flex; gap: 5px; flex-wrap: wrap;
+  }
+  .theme-btns button, .size-btns button { padding: 6px 12px; font-size: 12px; }
+  .theme-btns button.active, .size-btns button.active {
+    background: var(--bg-hl); border-color: var(--accent); color: var(--accent);
+  }
+  .accent-btns button {
+    width: 26px; height: 26px; padding: 0; border-radius: 50%;
+    border: 2px solid var(--border-2); cursor: pointer;
+  }
+  .accent-btns button.active { border-color: var(--accent); transform: scale(1.15); }
+
+  /* Stats */
+  .stat-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .stat-card {
+    background: var(--bg-3); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .stat-card .n {
+    font-size: 22px; font-weight: 800; color: var(--accent-2);
+    letter-spacing: -.5px;
+  }
+  .stat-card .l {
+    font-size: 10.5px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: .6px;
+    margin-top: 3px;
+  }
+  .stat-card.wide { grid-column: 1 / -1; }
+
+  /* Templates */
+  .tpl-item {
+    padding: 10px 14px; cursor: pointer; border-radius: 8px;
+    border: 1px solid var(--border); margin-bottom: 6px;
+    transition: .15s;
+  }
+  .tpl-item:hover { background: var(--bg-hl); border-color: var(--accent); }
+  .tpl-item .n { font-size: 13.5px; font-weight: 600; color: var(--accent-2); }
+  .tpl-item .d { font-size: 11.5px; color: var(--text-dim); margin-top: 3px; }
+
+  /* ══ TOAST ══ */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--bg-3); color: var(--text);
+    border: 1px solid var(--border-2);
+    padding: 11px 18px; border-radius: 10px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.5);
+    font-size: 13px; z-index: 200;
+    opacity: 0; pointer-events: none;
+    transition: .25s cubic-bezier(.2,.9,.3,1.2);
+    max-width: 90vw;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1; pointer-events: auto;
+  }
+  .toast button {
+    padding: 4px 10px; font-size: 11.5px;
+    background: var(--accent); color: #2a1608;
+    border-color: var(--accent-2);
+  }
+
+  /* ══ MASCOT ══ */
+  .mascot {
+    position: fixed; bottom: 14px; right: 14px;
+    font-size: 30px; line-height: 1;
+    user-select: none; pointer-events: none;
+    z-index: 50; transition: transform .3s;
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,.4));
+  }
+  .mascot.happy { animation: mascot-bounce .6s; }
+  @keyframes mascot-bounce {
+    0%,100% { transform: translateY(0) rotate(0); }
+    50%     { transform: translateY(-14px) rotate(15deg); }
+  }
+
+  /* ══ WATERMARK ══ */
+  .watermark {
+    position: fixed; bottom: 4px; left: 6px;
+    font-size: 9px; color: var(--text-faint);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    opacity: .35; user-select: none; pointer-events: none;
+    z-index: 40; letter-spacing: .3px;
+  }
+
+  /* ══ MOBILE ══ */
+  @media (max-width: 720px) {
+    .sidebar { width: 100%; }
+    .credit { display: none; }
+    .back-btn { display: inline-flex !important; }
+    .preview-pane { padding: 14px 18px; }
+    .editor-body.preview-split .write-pane { display: none; }
+    #titleInput { font-size: 19px; padding: 14px 18px 4px; }
+    #bodyInput { padding: 4px 18px 18px; }
+    .stats-bar { padding: 4px 18px 6px; gap: 10px; }
+  }
+  .back-btn { display: none; }
+
+  /* ══ PRINT ══ */
+  @media print {
+    .topbar, .sidebar, .editor-head, .stats-bar, .toast, .mascot, .watermark { display: none !important; }
+    body { background: white; color: black; }
+    .editor-pane, .write-pane { background: white; }
+    #titleInput { color: black; font-size: 22px; }
+    #bodyInput { color: black; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SpudNotes v0.2 — HTML structure
+     Made with 🥔 by DS & Jay
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo" id="logoBtn" title="SpudNotes by DS & Jay">🥔</span>
+    <div>
+      <h1>SpudNotes <span style="font-size:12px;opacity:.7">v0.2</span></h1>
+      <p>your notes, saved locally · <b>made by DS &amp; Jay</b></p>
+    </div>
+  </div>
+  <div class="actions">
+    <span class="credit">made by <b>DS</b> &amp; <b>Jay</b></span>
+    <button class="small" id="cmdBtn" title="Command palette (Ctrl+K)">⌘ Commands</button>
+    <button class="small" id="settingsBtn" title="Settings">⚙</button>
+    <button class="small" id="statsBtn" title="Stats">📊</button>
+    <button class="small" id="printBtn" title="Print">🖨</button>
+  </div>
+</header>
+
+<main>
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <input type="text" id="searchInput" class="search-input"
+             placeholder="🔍  search  ·  title:x  tag:x  before:2024" autocomplete="off">
+    </div>
+
+    <div class="toolbar" id="toolbar">
+      <button data-sort="recent" class="active" title="Sort: recent">recent</button>
+      <button data-sort="oldest" title="Sort: oldest">oldest</button>
+      <button data-sort="alpha" title="Sort: A→Z">A→Z</button>
+      <button data-view="all" class="active" title="View: all">all</button>
+      <button data-view="starred" title="Starred only">★</button>
+      <button data-view="today" title="Edited today">today</button>
+      <button data-view="archive" title="Archive">📦</button>
+      <button data-view="trash" title="Trash">🗑</button>
+    </div>
+
+    <div class="tag-bar" id="tagBar"></div>
+
+    <div class="new-wrap">
+      <div class="new-row">
+        <button class="primary" id="newBtn">＋ New note</button>
+        <button class="tpl-btn" id="tplBtn" title="New from template">📋</button>
+      </div>
+    </div>
+
+    <div class="note-list" id="noteList"></div>
+  </aside>
+
+  <!-- ═══ EDITOR ═══ -->
+  <section class="editor-pane" id="editorPane">
+    <div class="editor-head">
+      <button class="small back-btn" id="backBtn">← Notes</button>
+      <button class="small icon-btn" id="prevBtn" title="Previous note">↑</button>
+      <button class="small icon-btn" id="nextBtn" title="Next note">↓</button>
+      <div class="color-picker" id="colorPicker">
+        <button data-color="" title="No color" style="background:var(--bg-4)"></button>
+        <button data-color="red" title="Red" style="background:#f48771"></button>
+        <button data-color="yellow" title="Yellow" style="background:#ffd166"></button>
+        <button data-color="green" title="Green" style="background:#a8d977"></button>
+        <button data-color="blue" title="Blue" style="background:#8fb8ff"></button>
+        <button data-color="pink" title="Pink" style="background:#ff7ab6"></button>
+        <button data-color="purple" title="Purple" style="background:#c08fff"></button>
+      </div>
+      <span class="spacer"></span>
+      <span class="saved-indicator" id="savedIndicator"></span>
+      <span class="meta" id="metaInfo"></span>
+      <button class="small icon-btn" id="previewBtn" title="Toggle preview">👁</button>
+      <button class="small icon-btn" id="focusBtn" title="Focus mode (Ctrl+.)">🎯</button>
+      <button class="small icon-btn" id="histBtn" title="Version history">🕐</button>
+      <button class="small icon-btn" id="starBtn" title="Star">★</button>
+      <button class="small icon-btn" id="archiveBtn" title="Archive">📦</button>
+      <button class="small icon-btn" id="pinBtn" title="Pin">📌</button>
+      <button class="small icon-btn" id="deleteBtn" title="Delete">🗑</button>
+    </div>
+
+    <div class="editor-body" id="editorBody">
+      <div class="write-pane">
+        <input type="text" id="titleInput" placeholder="Untitled">
+        <textarea id="bodyInput" placeholder="Start typing…
+
+  # big heading
+  **bold**  *italic*  `code`
+  - [ ] checkbox
+  - bullet point
+  > quote
+  #tag anywhere"></textarea>
+        <div class="stats-bar" id="statsBar"></div>
+      </div>
+      <div class="preview-pane" id="previewPane"></div>
+    </div>
+
+    <div class="empty-editor" id="emptyEditor">
+      <div class="big">🥔</div>
+      <div>No note selected.</div>
+      <div style="font-size:11.5px;margin-top:6px">
+        Press <kbd>Ctrl+N</kbd> for a new note, or <kbd>Ctrl+P</kbd> to search.
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<!-- ══ MASCOT ══ -->
+<div class="mascot" id="mascot">🥔</div>
+
+<!-- ══ WATERMARK ══ -->
+<div class="watermark">SpudNotes v0.2 · DS &amp; Jay</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     Modal: Quick Switcher
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="qsModal">
+  <div class="modal">
+    <div class="modal-head">
+      🔍 Quick switch
+      <button class="close" data-close="qsModal">✕</button>
+    </div>
+    <div class="modal-body" style="padding:8px 10px">
+      <input type="text" id="qsInput" class="fr-input" placeholder="Type to jump to any note…" autocomplete="off">
+      <div class="qs-results" id="qsResults"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     Modal: Command Palette
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="cmdModal">
+  <div class="modal">
+    <div class="modal-head">
+      ⌘ Command palette
+      <button class="close" data-close="cmdModal">✕</button>
+    </div>
+    <div class="modal-body" style="padding:8px 10px">
+      <input type="text" id="cmdInput" class="fr-input" placeholder="Search commands…" autocomplete="off">
+      <div class="qs-results" id="cmdResults"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     Modal: Find & Replace
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="frModal">
+  <div class="modal">
+    <div class="modal-head">
+      🔎 Find &amp; replace <span style="font-size:11px;color:var(--text-faint);font-weight:400">(in current note)</span>
+      <button class="close" data-close="frModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="text" id="frFind" class="fr-input" placeholder="Find…" autocomplete="off">
+      <input type="text" id="frReplace" class="fr-input" placeholder="Replace with…" autocomplete="off">
+      <div class="fr-row">
+        <label><input type="checkbox" id="frCase"> case-sensitive</label>
+      </div>
+      <div class="fr-info" id="frInfo"></div>
+    </div>
+    <div class="modal-foot">
+      <button id="frReplaceOne">Replace</button>
+      <button class="primary" id="frReplaceAll">Replace all</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     Modal: Templates
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="tplModal">
+  <div class="modal">
+    <div class="modal-head">
+      📋 New from template
+      <button class="close" data-close="tplModal">✕</button>
+    </div>
+    <div class="modal-body" id="tplBody"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     Modal: Settings
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-head">
+      ⚙ Settings
+      <button class="close" data-close="settingsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="setting-group">
+        <h4>Theme</h4>
+        <div class="theme-btns">
+          <button data-theme="dark" class="active">Dark</button>
+          <button data-theme="light">Light</button>
+          <button data-theme="sepia">Sepia</button>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <h4>Accent color</h4>
+        <div class="accent-btns">
+          <button data-accent="" title="Orange" style="background:#ff9f43" class="active"></button>
+          <button data-accent="pink" title="Pink" style="background:#ff7ab6"></button>
+          <button data-accent="green" title="Green" style="background:#a8d977"></button>
+          <button data-accent="blue" title="Blue" style="background:#8fb8ff"></button>
+          <button data-accent="purple" title="Purple" style="background:#c08fff"></button>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <h4>Font size</h4>
+        <div class="size-btns">
+          <button data-size="sm">Small</button>
+          <button data-size="" class="active">Medium</button>
+          <button data-size="lg">Large</button>
+          <button data-size="xl">Extra large</button>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <h4>Preview mode</h4>
+        <div class="theme-btns">
+          <button data-preview="off" class="active">Off</button>
+          <button data-preview="on">Full preview</button>
+          <button data-preview="split">Split view</button>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <h4>Storage</h4>
+        <div class="setting-row">
+          <label>Using</label>
+          <span class="val" id="storageMeter">— KB</span>
+        </div>
+        <div class="setting-row">
+          <label>Notes</label>
+          <span class="val" id="storageCount">—</span>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <h4>Data</h4>
+        <div class="theme-btns">
+          <button id="exportAllBtn">⬇ Export all</button>
+          <button id="importClipBtn">📋 Import from clipboard</button>
+          <button id="clearAllBtn" style="color:var(--red)">🗑 Erase everything</button>
+        </div>
+      </div>
+
+      <div style="text-align:center;font-size:11px;color:var(--text-faint);margin-top:20px;line-height:1.7">
+        🥔 <b style="color:var(--accent)">SpudNotes v0.2</b><br>
+        Made with 🥔 by <b style="color:var(--accent)">DS &amp; Jay</b><br>
+        Original work — please don't steal 🙏
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     Modal: Stats
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="statsModal">
+  <div class="modal">
+    <div class="modal-head">
+      📊 Your SpudNotes stats
+      <button class="close" data-close="statsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="stat-grid" id="statGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     Modal: Version history
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="histModal">
+  <div class="modal">
+    <div class="modal-head">
+      🕐 Version history <span style="font-size:11px;color:var(--text-faint);font-weight:400">(last 10 snapshots)</span>
+      <button class="close" data-close="histModal">✕</button>
+    </div>
+    <div class="modal-body" id="histBody"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   🥔 SpudNotes v0.2 — application code
+   Made with 🥔 by DS & Jay
+   Original work. If you fork this, please keep the credit. 🙏
+   ═══════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+
+/* ─── Credit marker ─────────────────────────────────────────────── */
+window.SpudNotes = {
+  name: 'SpudNotes',
+  version: '0.2',
+  authors: ['DS', 'Jay'],
+  url: 'https://nardjay.github.io',
+  builtWith: '🥔',
+  note: 'Original work by DS & Jay. Please credit if you share.',
+};
+console.log(
+  '%c🥔 SpudNotes v0.2%c by DS & Jay',
+  'background:#ff9f43;color:#1a0e04;padding:4px 8px;border-radius:4px;font-weight:700',
+  'color:#8a745c;font-style:italic'
+);
+console.log('%cOriginal work — please don\'t steal. 🙏', 'color:#8a745c');
+console.log('%c🔗 nardjay.github.io', 'color:#ff9f43');
+
+/* ─── Tiny DOM helper ───────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+
+/* ─── Elements ──────────────────────────────────────────────────── */
+const sidebarEl    = $('sidebar');
+const editorPaneEl = $('editorPane');
+const noteListEl   = $('noteList');
+const titleInput   = $('titleInput');
+const bodyInput    = $('bodyInput');
+const searchInput  = $('searchInput');
+const tagBarEl     = $('tagBar');
+const savedInd     = $('savedIndicator');
+const metaInfo     = $('metaInfo');
+const editorBody   = $('editorBody');
+const previewPane  = $('previewPane');
+const emptyEditor  = $('emptyEditor');
+const statsBar     = $('statsBar');
+const mascotEl     = $('mascot');
+const toastEl      = $('toast');
+const colorPicker  = $('colorPicker');
+
+/* ─── Storage keys ──────────────────────────────────────────────── */
+const KEY_NOTES   = 'spudnotes.v2.notes';
+const KEY_ACTIVE  = 'spudnotes.v2.active';
+const KEY_SETTINGS= 'spudnotes.v2.settings';
+const KEY_HISTORY = 'spudnotes.v2.history';
+const KEY_TRASH   = 'spudnotes.v2.trash';
+const KEY_ARCHIVE = 'spudnotes.v2.archive';
+
+/* ─── Settings ──────────────────────────────────────────────────── */
+let settings = {
+  theme: 'dark',
+  accent: '',
+  size: '',
+  preview: 'off',
+};
+
+/* ─── State ─────────────────────────────────────────────────────── */
+let notes        = [];
+let archivedIds  = new Set();
+let trashedNotes = [];        // [{ note, deletedAt, wasArchived }]
+let histories    = {};        // { noteId: [snapshots] }
+let activeId     = null;
+let searchQuery  = '';
+let tagFilter    = null;
+let sortMode     = 'recent';
+let viewMode     = 'all';
+let saveTimer    = null;
+let listRenderT  = null;
+
+/* ─── Templates ─────────────────────────────────────────────────── */
+const TEMPLATES = [
+  { id: 'daily', name: '📅 Daily note', desc: 'A dated journal entry',
+    body: '# Daily — {date}\n\n## Today\'s focus\n\n- \n\n## Notes\n\n\n\n## Tomorrow\n\n- ' },
+  { id: 'meeting', name: '🤝 Meeting notes', desc: 'Attendees, agenda, action items',
+    body: '# Meeting — {date}\n\n**Attendees:** \n**Duration:** \n\n## Agenda\n\n1. \n2. \n\n## Notes\n\n\n\n## Action items\n\n- [ ] ' },
+  { id: 'todo', name: '✅ To-do list', desc: 'A simple checklist',
+    body: '# To-do — {date}\n\n- [ ] \n- [ ] \n- [ ] \n\n## Done today\n\n- [x] ' },
+  { id: 'journal', name: '📔 Journal', desc: 'Reflection prompt',
+    body: '# {date}\n\n**Mood:** \n\n## What happened today\n\n\n\n## What I learned\n\n\n\n## Gratitude\n\n- ' },
+  { id: 'code', name: '💻 Code snippet', desc: 'Save a chunk of code',
+    body: '# Snippet — \n\n**Language:** \n**Purpose:** \n\n```\n// paste here\n```\n\n## Notes\n\n' },
+  { id: 'blank', name: '🥔 Blank', desc: 'An empty note', body: '' },
+];
+
+/* ═══════════════════════════════════════════════════════════════════
+     Storage helpers — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+
+function loadAll() {
+  try {
+    const n = localStorage.getItem(KEY_NOTES);
+    notes = n ? JSON.parse(n) : [];
+    if (!Array.isArray(notes)) notes = [];
+  } catch (e) { notes = []; }
+
+  try {
+    const a = localStorage.getItem(KEY_ARCHIVE);
+    archivedIds = new Set(a ? JSON.parse(a) : []);
+  } catch (e) { archivedIds = new Set(); }
+
+  try {
+    const t = localStorage.getItem(KEY_TRASH);
+    trashedNotes = t ? JSON.parse(t) : [];
+  } catch (e) { trashedNotes = []; }
+
+  try {
+    const h = localStorage.getItem(KEY_HISTORY);
+    histories = h ? JSON.parse(h) : {};
+  } catch (e) { histories = {}; }
+
+  try {
+    const s = localStorage.getItem(KEY_SETTINGS);
+    if (s) settings = Object.assign(settings, JSON.parse(s));
+  } catch (e) {}
+
+  try {
+    activeId = localStorage.getItem(KEY_ACTIVE) || null;
+  } catch (e) { activeId = null; }
+}
+
+function persistNotes() {
+  try { localStorage.setItem(KEY_NOTES, JSON.stringify(notes)); } catch (e) {}
+}
+function persistArchive() {
+  try { localStorage.setItem(KEY_ARCHIVE, JSON.stringify([...archivedIds])); } catch (e) {}
+}
+function persistTrash() {
+  try { localStorage.setItem(KEY_TRASH, JSON.stringify(trashedNotes)); } catch (e) {}
+}
+function persistHistory() {
+  try { localStorage.setItem(KEY_HISTORY, JSON.stringify(histories)); } catch (e) {}
+}
+function persistSettings() {
+  try { localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings)); } catch (e) {}
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Utility — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+
+function nowId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function fmtDate(ts) {
+  const d = new Date(ts);
+  const now = Date.now();
+  const diff = now - ts;
+  if (diff < 60000) return 'just now';
+  if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+  if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+  if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
+function fmtTime(ts) {
+  return new Date(ts).toLocaleString(undefined, {
+    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
+}
+
+function todayStr() {
+  return new Date().toLocaleDateString(undefined, {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+}
+
+function wordCount(text) {
+  const t = (text || '').trim();
+  return t ? t.split(/\s+/).length : 0;
+}
+
+function charCount(text) { return (text || '').length; }
+
+function readingTime(words) {
+  const mins = Math.ceil(words / 200);
+  return mins <= 1 ? '< 1 min' : mins + ' min';
+}
+
+function extractTags(body) {
+  const re = /#([a-zA-Z][a-zA-Z0-9_-]{1,30})/g;
+  const out = new Set();
+  let m;
+  while ((m = re.exec(body || '')) !== null) out.add(m[1].toLowerCase());
+  return [...out];
+}
+
+function highlight(text, query) {
+  if (!query) return escapeHtml(text);
+  const esc = escapeHtml(text);
+  const q = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return esc.replace(new RegExp('(' + q + ')', 'ig'), '<mark>$1</mark>');
+}
+
+function isToday(ts) {
+  const d = new Date(ts), n = new Date();
+  return d.getFullYear() === n.getFullYear()
+      && d.getMonth() === n.getMonth()
+      && d.getDate() === n.getDate();
+}
+
+function isInRange(ts, from, to) {
+  if (from && ts < from) return false;
+  if (to && ts > to) return false;
+  return true;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Markdown rendering — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function renderMarkdown(src) {
+  let html = escapeHtml(src || '');
+
+  // fenced code blocks first (protect from other replacements)
+  const codeBlocks = [];
+  html = html.replace(/```([\s\S]*?)```/g, (_, code) => {
+    const i = codeBlocks.length;
+    codeBlocks.push('<pre><code>' + code.replace(/^\n/, '') + '</code></pre>');
+    return '\x00CB' + i + '\x00';
+  });
+
+  // inline code
+  html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+
+  // headings
+  html = html.replace(/^###### (.+)$/gm, '<h6>$1</h6>');
+  html = html.replace(/^##### (.+)$/gm, '<h5>$1</h5>');
+  html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+  // horizontal rule
+  html = html.replace(/^---+$/gm, '<hr>');
+
+  // blockquote
+  html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+
+  // bold / italic
+  html = html.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+  html = html.replace(/_([^_\n]+)_/g, '<em>$1</em>');
+
+  // links
+  html = html.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+  // checkboxes
+  html = html.replace(/^- \[ \] (.+)$/gm,
+    '<div><input type="checkbox" data-toggle="0"> $1</div>');
+  html = html.replace(/^- \[x\] (.+)$/gmi,
+    '<div><input type="checkbox" data-toggle="1" checked> $1</div>');
+
+  // unordered list
+  html = html.replace(/^[*-] (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>[\s\S]*?<\/li>)(?![\s\S]*?<li>)/, '<ul>$1</ul>');
+  // wrap all consecutive li blocks
+  html = html.replace(/(?:^|\n)((?:<li>.*<\/li>\n?)+)/g, '\n<ul>$1</ul>');
+
+  // ordered list
+  html = html.replace(/^\d+\. (.+)$/gm, '<oli>$1</oli>');
+  html = html.replace(/(?:^|\n)((?:<oli>.*<\/oli>\n?)+)/g, '\n<ol>$1</ol>');
+  html = html.replace(/<oli>/g, '<li>').replace(/<\/oli>/g, '</li>');
+
+  // tags
+  html = html.replace(/(^|\s)#([a-zA-Z][a-zA-Z0-9_-]{1,30})/g,
+    '$1<span class="tag">#$2</span>');
+
+  // paragraphs (lines not already wrapped)
+  html = html.replace(/^(?!<[hupbol]|<\/|<hr|<pre|<div)(.+)$/gm, '<p>$1</p>');
+
+  // restore code blocks
+  html = html.replace(/\x00CB(\d+)\x00/g, (_, i) => codeBlocks[+i]);
+
+  return html;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Version history — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function snapshotNote(note) {
+  if (!note) return;
+  const id = note.id;
+  if (!histories[id]) histories[id] = [];
+  const last = histories[id][0];
+  // don't spam identical snapshots
+  if (last && last.title === note.title && last.body === note.body) return;
+  histories[id].unshift({
+    title: note.title,
+    body: note.body,
+    at: Date.now(),
+  });
+  if (histories[id].length > 10) histories[id].length = 10;
+  persistHistory();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Toast — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+let toastTimer = null;
+function showToast(text, actionLabel, actionFn, ms) {
+  toastEl.innerHTML = '';
+  const msg = document.createElement('span');
+  msg.textContent = text;
+  toastEl.appendChild(msg);
+  if (actionLabel && actionFn) {
+    const b = document.createElement('button');
+    b.textContent = actionLabel;
+    b.onclick = () => {
+      hideToast();
+      actionFn();
+    };
+    toastEl.appendChild(b);
+  }
+  toastEl.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, ms || 5000);
+}
+function hideToast() {
+  toastEl.classList.remove('show');
+  if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Mascot — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+let mascotMood = 'idle';
+function setMascot(mood) {
+  mascotMood = mood;
+  const faces = {
+    idle: '🥔',
+    happy: '🥔',
+    sad: '🥔',
+    sleeping: '🥔',
+    love: '🥔',
+  };
+  mascotEl.textContent = faces[mood] || '🥔';
+}
+function mascotBounce() {
+  mascotEl.classList.remove('happy');
+  void mascotEl.offsetWidth;
+  mascotEl.classList.add('happy');
+  setTimeout(() => mascotEl.classList.remove('happy'), 700);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Note list — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function visibleNotes() {
+  let list = notes.slice();
+
+  // filters by view
+  if (viewMode === 'archive') {
+    list = list.filter(n => archivedIds.has(n.id));
+  } else if (viewMode === 'trash') {
+    list = trashedNotes.map(t => t.note);
+  } else {
+    // hide archived + trashed from 'all' view
+    list = list.filter(n => !archivedIds.has(n.id));
+    if (viewMode === 'starred') list = list.filter(n => n.starred);
+    if (viewMode === 'today') list = list.filter(n => isToday(n.updated));
+  }
+
+  // tag filter
+  if (tagFilter) {
+    list = list.filter(n => extractTags(n.body).includes(tagFilter));
+  }
+
+  // search
+  const q = searchQuery.trim();
+  if (q) {
+    const m = parseSearchQuery(q);
+    list = list.filter(n => matchSearch(n, m));
+  }
+
+  // sort
+  if (viewMode === 'trash') {
+    list.sort((a, b) => {
+      const ta = trashedNotes.find(t => t.note.id === a.id);
+      const tb = trashedNotes.find(t => t.note.id === b.id);
+      return (tb ? tb.deletedAt : 0) - (ta ? ta.deletedAt : 0);
+    });
+  } else if (sortMode === 'oldest') {
+    list.sort((a, b) => a.updated - b.updated);
+  } else if (sortMode === 'alpha') {
+    list.sort((a, b) => (a.title || 'Untitled').localeCompare(b.title || 'Untitled'));
+  } else {
+    // recent + pinned first
+    list.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return b.updated - a.updated;
+    });
+  }
+
+  return list;
+}
+
+function parseSearchQuery(q) {
+  const out = { text: [], title: [], tag: [], before: null, after: null };
+  // split on spaces but respect "quotes" for multi-word (skip for simplicity)
+  const parts = q.split(/\s+/);
+  parts.forEach(p => {
+    if (p.startsWith('title:')) out.title.push(p.slice(6).toLowerCase());
+    else if (p.startsWith('tag:')) out.tag.push(p.slice(4).toLowerCase());
+    else if (p.startsWith('before:')) {
+      const d = new Date(p.slice(7));
+      if (!isNaN(d)) out.before = d.getTime();
+    }
+    else if (p.startsWith('after:')) {
+      const d = new Date(p.slice(6));
+      if (!isNaN(d)) out.after = d.getTime();
+    }
+    else out.text.push(p.toLowerCase());
+  });
+  return out;
+}
+
+function matchSearch(note, m) {
+  const t = (note.title || '').toLowerCase();
+  const b = (note.body || '').toLowerCase();
+  const tags = extractTags(note.body);
+
+  for (const q of m.title) if (!t.includes(q)) return false;
+  for (const q of m.tag)   if (!tags.includes(q)) return false;
+  for (const q of m.text) {
+    if (!t.includes(q) && !b.includes(q)) return false;
+  }
+  if (m.before && note.updated >= m.before) return false;
+  if (m.after  && note.updated <= m.after)  return false;
+  return true;
+}
+
+function renderList() {
+  const list = visibleNotes();
+  noteListEl.innerHTML = '';
+
+  if (!list.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-list';
+    let msg = '🥔';
+    if (viewMode === 'trash') msg = '🗑<br><div style="margin-top:8px">Trash is empty.</div>';
+    else if (viewMode === 'archive') msg = '📦<br><div style="margin-top:8px">Archive is empty.</div>';
+    else if (viewMode === 'starred') msg = '★<br><div style="margin-top:8px">No starred notes yet.</div>';
+    else if (searchQuery) msg = '🔍<br><div style="margin-top:8px">No notes match<br>"' + escapeHtml(searchQuery) + '"</div>';
+    else msg = '🥔<br><div style="margin-top:8px">No notes yet.<br>Click <b style="color:var(--accent)">＋ New note</b> to start.</div>';
+    empty.innerHTML = '<div class="big">' + msg.split('<br>')[0] + '</div><div>' + (msg.split('<br>').slice(1).join('<br>') || '') + '</div>';
+    // simpler: just set innerHTML
+    empty.innerHTML = '<div style="font-size:30px;opacity:.5;margin-bottom:8px">' +
+      (viewMode === 'trash' ? '🗑' : viewMode === 'archive' ? '📦' : viewMode === 'starred' ? '★' : searchQuery ? '🔍' : '🥔') +
+      '</div><div>' +
+      (viewMode === 'trash' ? 'Trash is empty.' :
+       viewMode === 'archive' ? 'Archive is empty.' :
+       viewMode === 'starred' ? 'No starred notes yet.' :
+       searchQuery ? 'No notes match "' + escapeHtml(searchQuery) + '"' :
+       'No notes yet.<br>Click <b style="color:var(--accent)">＋ New note</b> to start.') +
+      '</div>';
+    noteListEl.appendChild(empty);
+    return;
+  }
+
+  list.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'note-item' + (n.id === activeId ? ' active' : '');
+    el.dataset.id = n.id;
+
+    if (n.color) {
+      const dot = document.createElement('div');
+      dot.className = 'note-dot ' + n.color;
+      el.appendChild(dot);
+    }
+
+    const bodyWrap = document.createElement('div');
+    bodyWrap.className = 'note-body';
+
+    const title = document.createElement('div');
+    title.className = 'title';
+    const rawTitle = n.title && n.title.trim() ? n.title : 'Untitled';
+    if (searchQuery && !searchQuery.includes(':')) {
+      title.innerHTML = highlight(rawTitle, searchQuery);
+    } else {
+      title.textContent = rawTitle;
+    }
+    bodyWrap.appendChild(title);
+
+    const prev = document.createElement('div');
+    prev.className = 'preview';
+    const firstLine = (n.body || '').split('\n').find(l => l.trim() !== '');
+    const previewText = firstLine ? firstLine.trim().slice(0, 80) : 'Empty note';
+    if (searchQuery && !searchQuery.includes(':')) {
+      prev.innerHTML = highlight(previewText, searchQuery);
+    } else {
+      prev.textContent = previewText;
+    }
+    bodyWrap.appendChild(prev);
+
+    const tags = extractTags(n.body).slice(0, 4);
+    if (tags.length) {
+      const tagWrap = document.createElement('div');
+      tagWrap.className = 'tags-mini';
+      tags.forEach(t => {
+        const s = document.createElement('span');
+        s.textContent = '#' + t;
+        tagWrap.appendChild(s);
+      });
+      bodyWrap.appendChild(tagWrap);
+    }
+
+    const date = document.createElement('div');
+    date.className = 'date';
+    if (viewMode === 'trash') {
+      const tr = trashedNotes.find(t => t.note.id === n.id);
+      date.textContent = 'deleted ' + (tr ? fmtDate(tr.deletedAt) : '');
+    } else {
+      date.textContent = fmtDate(n.updated);
+    }
+    bodyWrap.appendChild(date);
+
+    el.appendChild(bodyWrap);
+
+    if (n.starred) {
+      const pin = document.createElement('span');
+      pin.className = 'pin';
+      pin.textContent = '★';
+      el.appendChild(pin);
+    } else if (n.pinned) {
+      const pin = document.createElement('span');
+      pin.className = 'pin';
+      pin.textContent = '📌';
+      el.appendChild(pin);
+    }
+
+    el.addEventListener('click', () => {
+      if (viewMode === 'trash') return;  // trashed notes must be restored first
+      openNote(n.id);
+    });
+
+    noteListEl.appendChild(el);
+  });
+}
+
+function renderListLazy() {
+  if (listRenderT) clearTimeout(listRenderT);
+  listRenderT = setTimeout(renderList, 200);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Tag bar — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function renderTagBar() {
+  const counts = {};
+  notes.forEach(n => {
+    if (archivedIds.has(n.id)) return;
+    extractTags(n.body).forEach(t => {
+      counts[t] = (counts[t] || 0) + 1;
+    });
+  });
+
+  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 20);
+  tagBarEl.innerHTML = '';
+
+  if (!entries.length) return;
+
+  if (tagFilter) {
+    const clear = document.createElement('button');
+    clear.className = 'tag-chip active';
+    clear.textContent = '✕ #' + tagFilter;
+    clear.onclick = () => { tagFilter = null; renderAll(); };
+    tagBarEl.appendChild(clear);
+  }
+
+  entries.forEach(([tag, count]) => {
+    if (tag === tagFilter) return;
+    const c = document.createElement('button');
+    c.className = 'tag-chip';
+    c.textContent = '#' + tag + ' (' + count + ')';
+    c.onclick = () => {
+      tagFilter = tagFilter === tag ? null : tag;
+      renderAll();
+    };
+    tagBarEl.appendChild(c);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Editor — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function getActive() {
+  if (!activeId) return null;
+  return notes.find(n => n.id === activeId) || null;
+}
+
+function renderEditor() {
+  const n = getActive();
+  if (!n) {
+    editorBody.style.display = 'none';
+    emptyEditor.style.display = 'flex';
+    statsBar.style.display = 'none';
+    metaInfo.textContent = '';
+    return;
+  }
+  editorBody.style.display = 'flex';
+  emptyEditor.style.display = 'none';
+  statsBar.style.display = 'flex';
+  metaInfo.textContent = fmtDate(n.updated);
+
+  $('starBtn').textContent = n.starred ? '★' : '☆';
+  $('starBtn').style.color = n.starred ? 'var(--yellow)' : '';
+  $('pinBtn').textContent = n.pinned ? '📍' : '📌';
+  $('archiveBtn').textContent = archivedIds.has(n.id) ? '📤' : '📦';
+
+  // color picker
+  colorPicker.querySelectorAll('button').forEach(b => {
+    b.classList.toggle('active', (b.dataset.color || '') === (n.color || ''));
+  });
+
+  renderPreview();
+  renderStats();
+}
+
+function openNote(id) {
+  flushActive();
+  activeId = id;
+  try { localStorage.setItem(KEY_ACTIVE, id); } catch (e) {}
+
+  const n = getActive();
+  if (!n) return;
+
+  titleInput.value = n.title || '';
+  bodyInput.value = n.body || '';
+
+  renderList();
+  renderEditor();
+
+  if (window.innerWidth <= 720) {
+    sidebarEl.classList.add('hidden');
+    editorPaneEl.classList.remove('hidden');
+  }
+
+  setTimeout(() => {
+    // restore cursor to end
+    bodyInput.focus();
+    bodyInput.setSelectionRange(bodyInput.value.length, bodyInput.value.length);
+  }, 30);
+}
+
+function newNote(templateId) {
+  flushActive();
+  let title = '';
+  let body = '';
+
+  if (templateId) {
+    const tpl = TEMPLATES.find(t => t.id === templateId);
+    if (tpl) {
+      const stamp = tpl.body.replace(/\{date\}/g, todayStr());
+      body = stamp;
+      // pull first heading as title
+      const m = body.match(/^#\s+(.+)$/m);
+      if (m) title = m[1];
+    }
+  }
+
+  const n = {
+    id: nowId(),
+    title,
+    body,
+    pinned: false,
+    starred: false,
+    color: '',
+    updated: Date.now(),
+  };
+  notes.unshift(n);
+  persistNotes();
+  openNote(n.id);
+  setTimeout(() => titleInput.focus(), 40);
+  setMascot('happy');
+  mascotBounce();
+  return n;
+}
+
+function deleteNote() {
+  const n = getActive();
+  if (!n) return;
+
+  if (viewMode === 'trash') {
+    // permanent delete
+    if (!confirm('Permanently delete this note?\n\nThis cannot be undone.')) return;
+    trashedNotes = trashedNotes.filter(t => t.note.id !== n.id);
+    persistTrash();
+    activeId = notes.length ? notes[0].id : null;
+  } else {
+    // move to trash (with 5s undo)
+    const wasArchived = archivedIds.has(n.id);
+    trashedNotes.unshift({ note: JSON.parse(JSON.stringify(n)), deletedAt: Date.now(), wasArchived });
+    persistTrash();
+    notes = notes.filter(x => x.id !== n.id);
+    persistNotes();
+    if (wasArchived) { archivedIds.delete(n.id); persistArchive(); }
+    activeId = notes.length ? notes[0].id : null;
+
+    showToast('🗑 Note moved to trash', 'Undo', () => {
+      const tr = trashedNotes.shift();
+      if (!tr) return;
+      notes.unshift(tr.note);
+      if (tr.wasArchived) archivedIds.add(tr.note.id);
+      persistNotes();
+      persistArchive();
+      persistTrash();
+      activeId = tr.note.id;
+      const restored = getActive();
+      if (restored) {
+        titleInput.value = restored.title || '';
+        bodyInput.value = restored.body || '';
+      }
+      renderAll();
+      showToast('Note restored ✓');
+    });
+  }
+
+  try {
+    if (activeId) localStorage.setItem(KEY_ACTIVE, activeId);
+    else localStorage.removeItem(KEY_ACTIVE);
+  } catch (e) {}
+
+  const next = getActive();
+  titleInput.value = next ? next.title : '';
+  bodyInput.value = next ? next.body : '';
+
+  renderAll();
+
+  if (window.innerWidth <= 720 && !next) {
+    editorPaneEl.classList.add('hidden');
+    sidebarEl.classList.remove('hidden');
+  }
+}
+
+function toggleStar() {
+  const n = getActive();
+  if (!n) return;
+  n.starred = !n.starred;
+  n.updated = Date.now();
+  persistNotes();
+  renderList();
+  renderEditor();
+  flashSaved();
+}
+
+function togglePin() {
+  const n = getActive();
+  if (!n) return;
+  n.pinned = !n.pinned;
+  n.updated = Date.now();
+  persistNotes();
+  renderList();
+  renderEditor();
+  flashSaved();
+}
+
+function toggleArchive() {
+  const n = getActive();
+  if (!n) return;
+  if (archivedIds.has(n.id)) archivedIds.delete(n.id);
+  else archivedIds.add(n.id);
+  persistArchive();
+  renderAll();
+  showToast(archivedIds.has(n.id) ? '📦 Archived' : '📤 Unarchived');
+}
+
+function setColor(color) {
+  const n = getActive();
+  if (!n) return;
+  n.color = color || '';
+  persistNotes();
+  renderList();
+  renderEditor();
+}
+
+function flushActive() {
+  const n = getActive();
+  if (!n) return;
+  const t = titleInput.value;
+  const b = bodyInput.value;
+  if (n.title === t && n.body === b) return;
+
+  // snapshot before overwriting
+  snapshotNote(n);
+
+  n.title = t;
+  n.body = b;
+  n.updated = Date.now();
+  persistNotes();
+}
+
+function onEdit() {
+  const n = getActive();
+  if (!n) return;
+  const before = n.body;
+  n.title = titleInput.value;
+  n.body = bodyInput.value;
+  n.updated = Date.now();
+
+  // snapshot occasionally
+  if (Math.abs((n.body || '').length - (before || '').length) > 60) {
+    snapshotNote(n);
+  }
+
+  persistNotes();
+  flashSaved();
+  metaInfo.textContent = fmtDate(n.updated);
+  renderListLazy();
+  renderPreview();
+  renderStats();
+  renderTagBar();
+}
+
+let saveT = null;
+function flashSaved() {
+  savedInd.textContent = 'saved ✓';
+  savedInd.style.opacity = '1';
+  if (saveT) clearTimeout(saveT);
+  saveT = setTimeout(() => { savedInd.style.opacity = '.3'; }, 900);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Preview + stats — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function renderPreview() {
+  if (settings.preview === 'off') return;
+  const n = getActive();
+  previewPane.innerHTML = n ? renderMarkdown(n.body || '') : '';
+  // re-bind checkbox toggles
+  previewPane.querySelectorAll('input[type=checkbox][data-toggle]').forEach((cb, i) => {
+    cb.addEventListener('change', () => {
+      toggleCheckboxInBody(i, cb.checked);
+    });
+  });
+}
+
+function toggleCheckboxInBody(index, checked) {
+  const n = getActive();
+  if (!n) return;
+  const lines = n.body.split('\n');
+  let count = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^- \[[ x]\] /.test(lines[i])) {
+      if (count === index) {
+        lines[i] = lines[i].replace(/^- \[[ x]\] /, checked ? '- [x] ' : '- [ ] ');
+        break;
+      }
+      count++;
+    }
+  }
+  const newBody = lines.join('\n');
+  n.body = newBody;
+  n.updated = Date.now();
+  bodyInput.value = newBody;
+  persistNotes();
+  renderPreview();
+  flashSaved();
+  renderListLazy();
+}
+
+function renderStats() {
+  const n = getActive();
+  if (!n) return;
+  const words = wordCount(n.body);
+  const chars = charCount(n.body);
+  const lines = (n.body || '').split('\n').length;
+  const tags = extractTags(n.body).length;
+
+  statsBar.innerHTML =
+    '<span><b>' + words + '</b> words</span>' +
+    '<span><b>' + chars + '</b> chars</span>' +
+    '<span><b>' + lines + '</b> lines</span>' +
+    (tags ? '<span><b>' + tags + '</b> tags</span>' : '') +
+    '<span>~' + readingTime(words) + ' read</span>' +
+    (chars > 50000 ? '<span class="warn">⚠ long note</span>' : '');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Search + views — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function renderAll() {
+  renderList();
+  renderEditor();
+  renderTagBar();
+  renderToolbarState();
+}
+
+function renderToolbarState() {
+  document.querySelectorAll('#toolbar button').forEach(b => {
+    if (b.dataset.sort) b.classList.toggle('active', b.dataset.sort === sortMode);
+    if (b.dataset.view) b.classList.toggle('active', b.dataset.view === viewMode);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Settings — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function applySettings() {
+  document.body.className = '';
+  document.body.classList.add('theme-' + settings.theme);
+  if (settings.theme === 'light') document.body.classList.add('light');
+  if (settings.theme === 'sepia') document.body.classList.add('sepia');
+
+  if (settings.accent) document.body.classList.add('accent-' + settings.accent);
+  if (settings.size) document.body.classList.add('font-' + settings.size);
+
+  editorBody.classList.remove('preview-on', 'preview-split');
+  if (settings.preview === 'on') editorBody.classList.add('preview-on');
+  if (settings.preview === 'split') editorBody.classList.add('preview-split');
+
+  renderPreview();
+
+  // update settings modal active states
+  document.querySelectorAll('.theme-btns button[data-theme]').forEach(b =>
+    b.classList.toggle('active', b.dataset.theme === settings.theme));
+  document.querySelectorAll('.size-btns button[data-size]').forEach(b =>
+    b.classList.toggle('active', (b.dataset.size || '') === (settings.size || '')));
+  document.querySelectorAll('.accent-btns button[data-accent]').forEach(b =>
+    b.classList.toggle('active', (b.dataset.accent || '') === (settings.accent || '')));
+  document.querySelectorAll('.theme-btns button[data-preview]').forEach(b =>
+    b.classList.toggle('active', b.dataset.preview === settings.preview));
+
+  persistSettings();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Modals — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('[data-close]').forEach(b => {
+  b.addEventListener('click', () => closeModal(b.dataset.close));
+});
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => {
+    if (e.target === o) o.classList.remove('open');
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+     Quick Switcher — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+let qsSel = 0;
+let qsList = [];
+
+function openQuickSwitch() {
+  openModal('qsModal');
+  const inp = $('qsInput');
+  inp.value = '';
+  qsSel = 0;
+  renderQS('');
+  setTimeout(() => inp.focus(), 30);
+}
+
+function fuzzyMatch(text, query) {
+  const t = text.toLowerCase();
+  const q = query.toLowerCase();
+  if (!q) return true;
+  let ti = 0;
+  for (const ch of q) {
+    const idx = t.indexOf(ch, ti);
+    if (idx === -1) return false;
+    ti = idx + 1;
+  }
+  return true;
+}
+
+function renderQS(query) {
+  qsList = notes.filter(n => {
+    if (archivedIds.has(n.id)) return false;
+    if (!query) return true;
+    return fuzzyMatch(n.title || '', query) || fuzzyMatch(n.body || '', query);
+  }).slice(0, 30);
+
+  const cont = $('qsResults');
+  cont.innerHTML = '';
+
+  if (!qsList.length) {
+    cont.innerHTML = '<div class="qs-empty">No matching notes.</div>';
+    return;
+  }
+
+  qsList.forEach((n, i) => {
+    const el = document.createElement('div');
+    el.className = 'qs-item' + (i === qsSel ? ' selected' : '');
+
+    const t = document.createElement('div');
+    t.className = 't';
+    t.textContent = n.title && n.title.trim() ? n.title : 'Untitled';
+    el.appendChild(t);
+
+    const d = document.createElement('div');
+    d.className = 'd';
+    d.textContent = fmtDate(n.updated);
+    el.appendChild(d);
+
+    el.addEventListener('click', () => {
+      closeModal('qsModal');
+      openNote(n.id);
+    });
+
+    cont.appendChild(el);
+  });
+}
+
+$('qsInput').addEventListener('input', e => {
+  qsSel = 0;
+  renderQS(e.target.value);
+});
+$('qsInput').addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    qsSel = Math.min(qsSel + 1, qsList.length - 1);
+    renderQS($('qsInput').value);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    qsSel = Math.max(qsSel - 1, 0);
+    renderQS($('qsInput').value);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    const n = qsList[qsSel];
+    if (n) { closeModal('qsModal'); openNote(n.id); }
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+     Command palette — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+const COMMANDS = [
+  { ico: '＋', t: 'New note',           k: 'Ctrl+N',     fn: () => newNote() },
+  { ico: '📋', t: 'New from template',  k: 'Ctrl+Shift+N', fn: () => openTemplates() },
+  { ico: '🔍', t: 'Quick switch',       k: 'Ctrl+P',     fn: () => openQuickSwitch() },
+  { ico: '💾', t: 'Export all notes',   k: '',           fn: () => exportAll() },
+  { ico: '🔎', t: 'Find & replace',     k: 'Ctrl+H',     fn: () => openFindReplace() },
+  { ico: '👁',  t: 'Toggle preview',     k: '',           fn: () => togglePreview() },
+  { ico: '🎯', t: 'Toggle focus mode',  k: 'Ctrl+.',     fn: () => toggleFocus() },
+  { ico: '⚙',  t: 'Open settings',       k: '',           fn: () => openModal('settingsModal') },
+  { ico: '📊', t: 'View stats',          k: '',           fn: () => openStats() },
+  { ico: '🕐', t: 'Version history',     k: '',           fn: () => openHistory() },
+  { ico: '🖨', t: 'Print / export PDF',  k: 'Ctrl+P',     fn: () => window.print() },
+  { ico: '★',  t: 'Star/unstar note',    k: '',           fn: () => toggleStar() },
+  { ico: '📌', t: 'Pin/unpin note',      k: '',           fn: () => togglePin() },
+  { ico: '📦', t: 'Archive/unarchive',   k: '',           fn: () => toggleArchive() },
+  { ico: '🌗', t: 'Cycle theme',         k: '',           fn: () => cycleTheme() },
+  { ico: '🔤', t: 'Cycle font size',     k: '',           fn: () => cycleSize() },
+  { ico: '🗑',  t: 'Delete current note', k: '',           fn: () => deleteNote() },
+  { ico: '💡', t: 'Show credits',         k: '',           fn: () => showCredits() },
+];
+
+let cmdSel = 0;
+let cmdList = [];
+
+function openCommandPalette() {
+  openModal('cmdModal');
+  const inp = $('cmdInput');
+  inp.value = '';
+  cmdSel = 0;
+  renderCmd('');
+  setTimeout(() => inp.focus(), 30);
+}
+
+function renderCmd(query) {
+  cmdList = COMMANDS.filter(c => fuzzyMatch(c.t, query));
+  const cont = $('cmdResults');
+  cont.innerHTML = '';
+
+  if (!cmdList.length) {
+    cont.innerHTML = '<div class="qs-empty">No matching commands.</div>';
+    return;
+  }
+
+  cmdList.forEach((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'cmd-item' + (i === cmdSel ? ' selected' : '');
+
+    const ico = document.createElement('span');
+    ico.className = 'ico';
+    ico.textContent = c.ico;
+    el.appendChild(ico);
+
+    const t = document.createElement('div');
+    t.className = 't';
+    t.textContent = c.t;
+    el.appendChild(t);
+
+    if (c.k) {
+      const k = document.createElement('span');
+      k.className = 'k';
+      k.textContent = c.k;
+      el.appendChild(k);
+    }
+
+    el.addEventListener('click', () => {
+      closeModal('cmdModal');
+      setTimeout(() => c.fn(), 30);
+    });
+
+    cont.appendChild(el);
+  });
+}
+
+$('cmdInput').addEventListener('input', e => {
+  cmdSel = 0;
+  renderCmd(e.target.value);
+});
+$('cmdInput').addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    cmdSel = Math.min(cmdSel + 1, cmdList.length - 1);
+    renderCmd($('cmdInput').value);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    cmdSel = Math.max(cmdSel - 1, 0);
+    renderCmd($('cmdInput').value);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    const c = cmdList[cmdSel];
+    if (c) { closeModal('cmdModal'); setTimeout(() => c.fn(), 30); }
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+     Theme helpers — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function cycleTheme() {
+  const order = ['dark', 'light', 'sepia'];
+  const i = order.indexOf(settings.theme);
+  settings.theme = order[(i + 1) % order.length];
+  applySettings();
+  showToast('Theme: ' + settings.theme);
+}
+
+function cycleSize() {
+  const order = ['sm', '', 'lg', 'xl'];
+  const i = order.indexOf(settings.size);
+  settings.size = order[(i + 1) % order.length];
+  applySettings();
+  showToast('Font size: ' + (settings.size || 'medium'));
+}
+
+function togglePreview() {
+  const modes = ['off', 'on', 'split'];
+  const i = modes.indexOf(settings.preview);
+  settings.preview = modes[(i + 1) % modes.length];
+  applySettings();
+  showToast('Preview: ' + settings.preview);
+}
+
+function toggleFocus() {
+  document.body.classList.toggle('focus-mode');
+  const on = document.body.classList.contains('focus-mode');
+  showToast(on ? '🎯 Focus mode on' : 'Focus mode off');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Export / import — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function exportAll() {
+  flushActive();
+  const data = JSON.stringify({
+    app: 'SpudNotes',
+    version: '0.2',
+    authors: ['DS', 'Jay'],
+    credit: 'Made with 🥔 by DS & Jay — please don\'t steal',
+    exported: new Date().toISOString(),
+    notes,
+    archivedIds: [...archivedIds],
+    histories,
+  }, null, 2);
+
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const d = new Date();
+  a.href = url;
+  a.download = `spudnotes-backup-${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showToast('⬇ Exported ' + notes.length + ' notes');
+}
+
+function importFromClipboard() {
+  if (!navigator.clipboard || !navigator.clipboard.readText) {
+    showToast('Clipboard not available');
+    return;
+  }
+  navigator.clipboard.readText().then(text => {
+    try {
+      const data = JSON.parse(text);
+      const incoming = Array.isArray(data) ? data : data.notes;
+      if (!Array.isArray(incoming)) throw new Error('not a SpudNotes backup');
+      const valid = incoming.filter(n => n && typeof n === 'object' && n.id);
+      if (!valid.length) throw new Error('no valid notes');
+
+      const replace = confirm(
+        `Import ${valid.length} note(s).\n\n` +
+        `OK = REPLACE all current notes\n` +
+        `Cancel = MERGE with current notes`
+      );
+
+      if (replace) {
+        notes = valid.map(n => ({
+          id: n.id || nowId(), title: n.title || '', body: n.body || '',
+          pinned: !!n.pinned, starred: !!n.starred, color: n.color || '',
+          updated: n.updated || Date.now(),
+        }));
+      } else {
+        const ids = new Set(notes.map(n => n.id));
+        valid.forEach(n => {
+          notes.push({
+            id: ids.has(n.id) ? nowId() : n.id,
+            title: n.title || '', body: n.body || '',
+            pinned: !!n.pinned, starred: !!n.starred, color: n.color || '',
+            updated: n.updated || Date.now(),
+          });
+        });
+      }
+      persistNotes();
+      activeId = notes.length ? notes[0].id : null;
+      const cur = getActive();
+      titleInput.value = cur ? cur.title : '';
+      bodyInput.value = cur ? cur.body : '';
+      renderAll();
+      showToast('✓ Imported ' + valid.length + ' notes');
+    } catch (err) {
+      alert('Could not import:\n' + err.message);
+    }
+  }).catch(() => showToast('Clipboard read failed'));
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Find & replace — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function openFindReplace() {
+  if (!getActive()) { showToast('Open a note first'); return; }
+  openModal('frModal');
+  $('frFind').value = '';
+  $('frReplace').value = '';
+  $('frInfo').textContent = '';
+  setTimeout(() => $('frFind').focus(), 40);
+}
+
+function doFindReplace(one) {
+  const n = getActive();
+  if (!n) return;
+  const find = $('frFind').value;
+  const repl = $('frReplace').value;
+  const cs = $('frCase').checked;
+  if (!find) return;
+
+  let count = 0;
+  let body = n.body;
+  const flags = cs ? 'g' : 'gi';
+  const re = new RegExp(find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), flags);
+
+  if (one) {
+    // replace first match only
+    const first = new RegExp(find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), cs ? '' : 'i');
+    body = body.replace(first, () => { count++; return repl; });
+  } else {
+    body = body.replace(re, () => { count++; return repl; });
+  }
+
+  n.body = body;
+  n.updated = Date.now();
+  bodyInput.value = body;
+  persistNotes();
+  renderPreview();
+  renderStats();
+  renderListLazy();
+  flashSaved();
+  $('frInfo').textContent = count ? count + ' replacement' + (count > 1 ? 's' : '') + ' made.' : 'No matches found.';
+}
+
+$('frReplaceOne').addEventListener('click', () => doFindReplace(true));
+$('frReplaceAll').addEventListener('click', () => doFindReplace(false));
+
+/* ═══════════════════════════════════════════════════════════════════
+     Templates — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function openTemplates() {
+  const body = $('tplBody');
+  body.innerHTML = '';
+  TEMPLATES.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'tpl-item';
+    el.innerHTML = '<div class="n">' + escapeHtml(t.name) + '</div><div class="d">' + escapeHtml(t.desc) + '</div>';
+    el.addEventListener('click', () => {
+      closeModal('tplModal');
+      newNote(t.id);
+    });
+    body.appendChild(el);
+  });
+  openModal('tplModal');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Stats — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function openStats() {
+  const totalNotes = notes.length;
+  const totalWords = notes.reduce((s, n) => s + wordCount(n.body), 0);
+  const totalChars = notes.reduce((s, n) => s + charCount(n.body), 0);
+  const starred = notes.filter(n => n.starred).length;
+  const pinned = notes.filter(n => n.pinned).length;
+  const archived = archivedIds.size;
+  const trashed = trashedNotes.length;
+
+  const tagCounts = {};
+  notes.forEach(n => extractTags(n.body).forEach(t => {
+    tagCounts[t] = (tagCounts[t] || 0) + 1;
+  }));
+  const topTag = Object.entries(tagCounts).sort((a, b) => b[1] - a[1])[0];
+
+  const today = notes.filter(n => isToday(n.updated)).length;
+  const week = notes.filter(n => Date.now() - n.updated < 7 * 86400000).length;
+
+  const bytes = new Blob([JSON.stringify(notes)]).size;
+  const kb = (bytes / 1024).toFixed(1);
+
+  $('statGrid').innerHTML = [
+    card(totalNotes, 'total notes'),
+    card(today, 'edited today'),
+    card(week, 'this week'),
+    card(totalWords.toLocaleString(), 'words written'),
+    card(totalChars.toLocaleString(), 'characters'),
+    card(starred, 'starred'),
+    card(pinned, 'pinned'),
+    card(archived, 'archived'),
+    card(trashed, 'in trash'),
+    card(kb + ' KB', 'storage used'),
+    topTag ? card('#' + topTag[0], 'top tag (' + topTag[1] + ' uses)', true) : '',
+    card(readingTime(totalWords) + ' total', 'reading time', true),
+  ].join('');
+
+  openModal('statsModal');
+}
+function card(n, l, wide) {
+  return '<div class="stat-card' + (wide ? ' wide' : '') + '">' +
+         '<div class="n">' + n + '</div>' +
+         '<div class="l">' + l + '</div></div>';
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Version history — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function openHistory() {
+  const n = getActive();
+  if (!n) { showToast('Open a note first'); return; }
+
+  const body = $('histBody');
+  const list = histories[n.id] || [];
+  body.innerHTML = '';
+
+  if (!list.length) {
+    body.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-faint);font-size:12.5px">No history yet.<br>Snapshots are saved as you edit.</div>';
+    openModal('histModal');
+    return;
+  }
+
+  list.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'tpl-item';
+    const preview = (s.body || '').split('\n').find(l => l.trim()) || '(empty)';
+    el.innerHTML =
+      '<div class="n">' + fmtTime(s.at) + (i === 0 ? ' · current' : '') + '</div>' +
+      '<div class="d">' + escapeHtml((s.title || 'Untitled').slice(0, 60)) + ' — ' + escapeHtml(preview.slice(0, 60)) + '</div>';
+    if (i !== 0) {
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', () => {
+        if (!confirm('Restore this version?\n\nYour current version will be saved as a snapshot.')) return;
+        snapshotNote(n);
+        n.title = s.title;
+        n.body = s.body;
+        n.updated = Date.now();
+        bodyInput.value = s.body;
+        titleInput.value = s.title || '';
+        persistNotes();
+        renderAll();
+        closeModal('histModal');
+        showToast('✓ Restored');
+      });
+    }
+    body.appendChild(el);
+  });
+
+  openModal('histModal');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Storage meter + credits — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+function updateStorageMeter() {
+  const bytes = new Blob([JSON.stringify(notes)]).size;
+  const kb = (bytes / 1024).toFixed(1);
+  const el = $('storageMeter');
+  const el2 = $('storageCount');
+  if (el) el.textContent = kb + ' KB';
+  if (el2) el2.textContent = notes.length + ' notes';
+}
+
+function showCredits() {
+  alert(
+    '🥔 SpudNotes v0.2\n\n' +
+    'Made with 🥔 by DS & Jay\n\n' +
+    '🌐 nardjay.github.io\n\n' +
+    'Original work. If you found this somewhere else,\n' +
+    'or someone is claiming they made it, please\n' +
+    'let them know they didn\'t. 🙏'
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+     Wiring — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+
+// new / template
+$('newBtn').addEventListener('click', () => newNote());
+$('tplBtn').addEventListener('click', openTemplates);
+
+// star / pin / archive / delete
+$('starBtn').addEventListener('click', toggleStar);
+$('pinBtn').addEventListener('click', togglePin);
+$('archiveBtn').addEventListener('click', toggleArchive);
+$('deleteBtn').addEventListener('click', deleteNote);
+
+// preview / focus / history
+$('previewBtn').addEventListener('click', togglePreview);
+$('focusBtn').addEventListener('click', toggleFocus);
+$('histBtn').addEventListener('click', openHistory);
+
+// prev / next
+$('prevBtn').addEventListener('click', () => {
+  const list = visibleNotes();
+  const i = list.findIndex(n => n.id === activeId);
+  if (i > 0) openNote(list[i - 1].id);
+});
+$('nextBtn').addEventListener('click', () => {
+  const list = visibleNotes();
+  const i = list.findIndex(n => n.id === activeId);
+  if (i >= 0 && i < list.length - 1) openNote(list[i + 1].id);
+});
+
+// color picker
+colorPicker.querySelectorAll('button').forEach(b => {
+  b.addEventListener('click', () => setColor(b.dataset.color || ''));
+});
+
+// mobile back
+$('backBtn').addEventListener('click', () => {
+  flushActive();
+  sidebarEl.classList.remove('hidden');
+  editorPaneEl.classList.add('hidden');
+});
+
+// title / body
+titleInput.addEventListener('input', onEdit);
+bodyInput.addEventListener('input', onEdit);
+titleInput.addEventListener('blur', flushActive);
+bodyInput.addEventListener('blur', flushActive);
+
+// editor formatting shortcuts
+bodyInput.addEventListener('keydown', e => {
+  const mod = e.ctrlKey || e.metaKey;
+
+  if (mod && e.key === 'b') {
+    e.preventDefault();
+    wrapSelection('**', '**');
+  } else if (mod && e.key === 'i') {
+    e.preventDefault();
+    wrapSelection('*', '*');
+  } else if (mod && e.key === '`') {
+    e.preventDefault();
+    wrapSelection('`', '`');
+  } else if (e.key === 'Enter' && !e.shiftKey) {
+    autoContinueList(e);
+  } else if (e.key === 'Tab') {
+    e.preventDefault();
+    const s = bodyInput.selectionStart;
+    bodyInput.value = bodyInput.value.slice(0, s) + '  ' + bodyInput.value.slice(bodyInput.selectionEnd);
+    bodyInput.selectionStart = bodyInput.selectionEnd = s + 2;
+    onEdit();
+  }
+});
+
+function wrapSelection(before, after) {
+  const s = bodyInput.selectionStart;
+  const e = bodyInput.selectionEnd;
+  const val = bodyInput.value;
+  const selected = val.slice(s, e);
+  bodyInput.value = val.slice(0, s) + before + selected + after + val.slice(e);
+  if (selected) {
+    bodyInput.setSelectionRange(s + before.length, e + before.length);
+  } else {
+    bodyInput.setSelectionRange(s + before.length, s + before.length);
+  }
+  onEdit();
+}
+
+function autoContinueList(e) {
+  const val = bodyInput.value;
+  const pos = bodyInput.selectionStart;
+  const lineStart = val.lastIndexOf('\n', pos - 1) + 1;
+  const line = val.slice(lineStart, pos);
+
+  // continue bullets
+  const m = line.match(/^(\s*)([-*]|\d+\.)\s+(.*)$/);
+  if (m) {
+    if (!m[3].trim()) {
+      // empty item → exit list
+      e.preventDefault();
+      bodyInput.value = val.slice(0, lineStart) + val.slice(pos);
+      bodyInput.selectionStart = bodyInput.selectionEnd = lineStart;
+      onEdit();
+      return;
+    }
+    e.preventDefault();
+    let marker = m[2];
+    if (/^\d+\.$/.test(marker)) {
+      marker = (parseInt(marker) + 1) + '.';
+    }
+    const insert = '\n' + m[1] + marker + ' ';
+    bodyInput.value = val.slice(0, pos) + insert + val.slice(bodyInput.selectionEnd);
+    bodyInput.selectionStart = bodyInput.selectionEnd = pos + insert.length;
+    onEdit();
+    return;
+  }
+
+  // continue checkboxes
+  const cm = line.match(/^(\s*)- \[[ x]\]\s*(.*)$/);
+  if (cm) {
+    if (!cm[2].trim()) {
+      e.preventDefault();
+      bodyInput.value = val.slice(0, lineStart) + val.slice(pos);
+      bodyInput.selectionStart = bodyInput.selectionEnd = lineStart;
+      onEdit();
+      return;
+    }
+    e.preventDefault();
+    const insert = '\n' + cm[1] + '- [ ] ';
+    bodyInput.value = val.slice(0, pos) + insert + val.slice(bodyInput.selectionEnd);
+    bodyInput.selectionStart = bodyInput.selectionEnd = pos + insert.length;
+    onEdit();
+  }
+}
+
+// search
+searchInput.addEventListener('input', () => {
+  searchQuery = searchInput.value;
+  renderList();
+});
+
+// toolbar
+document.querySelectorAll('#toolbar button').forEach(b => {
+  b.addEventListener('click', () => {
+    if (b.dataset.sort) sortMode = b.dataset.sort;
+    if (b.dataset.view) {
+      viewMode = b.dataset.view;
+      if (viewMode === 'trash') {
+        activeId = null;
+        titleInput.value = '';
+        bodyInput.value = '';
+        renderEditor();
+      }
+    }
+    renderAll();
+  });
+});
+
+// top bar
+$('cmdBtn').addEventListener('click', openCommandPalette);
+$('settingsBtn').addEventListener('click', () => { openModal('settingsModal'); updateStorageMeter(); });
+$('statsBtn').addEventListener('click', openStats);
+$('printBtn').addEventListener('click', () => window.print());
+$('logoBtn').addEventListener('click', showCredits);
+
+// settings modal actions
+document.querySelectorAll('.theme-btns button[data-theme]').forEach(b => {
+  b.addEventListener('click', () => { settings.theme = b.dataset.theme; applySettings(); });
+});
+document.querySelectorAll('.accent-btns button[data-accent]').forEach(b => {
+  b.addEventListener('click', () => { settings.accent = b.dataset.accent; applySettings(); });
+});
+document.querySelectorAll('.size-btns button[data-size]').forEach(b => {
+  b.addEventListener('click', () => { settings.size = b.dataset.size; applySettings(); });
+});
+document.querySelectorAll('.theme-btns button[data-preview]').forEach(b => {
+  b.addEventListener('click', () => { settings.preview = b.dataset.preview; applySettings(); });
+});
+$('exportAllBtn').addEventListener('click', exportAll);
+$('importClipBtn').addEventListener('click', importFromClipboard);
+$('clearAllBtn').addEventListener('click', () => {
+  if (!confirm('Erase ALL notes? This cannot be undone.')) return;
+  if (!confirm('Are you absolutely sure? Everything will be gone.')) return;
+  notes = [];
+  archivedIds = new Set();
+  trashedNotes = [];
+  histories = {};
+  activeId = null;
+  try {
+    localStorage.removeItem(KEY_NOTES);
+    localStorage.removeItem(KEY_ARCHIVE);
+    localStorage.removeItem(KEY_TRASH);
+    localStorage.removeItem(KEY_HISTORY);
+    localStorage.removeItem(KEY_ACTIVE);
+  } catch (e) {}
+  titleInput.value = '';
+  bodyInput.value = '';
+  renderAll();
+  closeModal('settingsModal');
+  showToast('Everything erased.');
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+     Keyboard shortcuts — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  const mod = e.ctrlKey || e.metaKey;
+
+  if (mod && e.key === 'k') { e.preventDefault(); openCommandPalette(); return; }
+  if (mod && e.key === 'p') { e.preventDefault(); openQuickSwitch(); return; }
+  if (mod && e.key === 'n' && e.shiftKey) { e.preventDefault(); openTemplates(); return; }
+  if (mod && e.key === 'n') { e.preventDefault(); newNote(); return; }
+  if (mod && e.key === 'f') {
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+    return;
+  }
+  if (mod && e.key === 'h') { e.preventDefault(); openFindReplace(); return; }
+  if (mod && e.key === 's') {
+    e.preventDefault();
+    flushActive();
+    flashSaved();
+    return;
+  }
+  if (mod && e.key === '.') { e.preventDefault(); toggleFocus(); return; }
+
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(o => o.classList.remove('open'));
+    if (document.activeElement === searchInput) {
+      searchInput.value = '';
+      searchQuery = '';
+      renderList();
+      bodyInput.focus();
+    }
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+     Multi-tab sync — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+window.addEventListener('storage', e => {
+  if (e.key === KEY_NOTES || e.key === KEY_ARCHIVE || e.key === KEY_TRASH) {
+    const focusId = activeId;
+    const title = titleInput.value;
+    const body = bodyInput.value;
+    loadAll();
+    activeId = focusId;
+    if (getActive()) {
+      titleInput.value = getActive().title;
+      bodyInput.value = getActive().body;
+    }
+    renderAll();
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════════
+     Devtools detect — credit warning
+     ═══════════════════════════════════════════════════════════════════ */
+let devtoolsOpen = false;
+setInterval(() => {
+  const w = window.outerWidth - window.innerWidth;
+  const h = window.outerHeight - window.innerHeight;
+  const open = w > 160 || h > 160;
+  if (open && !devtoolsOpen) {
+    devtoolsOpen = true;
+    console.log(
+      '%c🥔 Hi there. SpudNotes was made by DS & Jay.',
+      'color:#ff9f43;font-size:14px;font-weight:700'
+    );
+    console.log(
+      '%cIf you\'re copying code — please keep our credit. 🙏',
+      'color:#8a745c;font-style:italic'
+    );
+    console.log('%cOriginal work: nardjay.github.io', 'color:#ff9f43');
+  } else if (!open) {
+    devtoolsOpen = false;
+  }
+}, 1500);
+
+/* ═══════════════════════════════════════════════════════════════════
+     Boot — credit: DS & Jay
+     ═══════════════════════════════════════════════════════════════════ */
+(function boot() {
+  loadAll();
+  applySettings();
+
+  if (!activeId && notes.length) {
+    activeId = notes[0].id;
+    try { localStorage.setItem(KEY_ACTIVE, activeId); } catch (e) {}
+  }
+
+  const n = getActive();
+  if (n) {
+    titleInput.value = n.title || '';
+    bodyInput.value = n.body || '';
+  }
+
+  renderAll();
+  updateStorageMeter();
+
+  if (window.innerWidth <= 720) {
+    editorPaneEl.classList.add('hidden');
+  }
+
+  savedInd.style.opacity = '.3';
+  setMascot('idle');
+
+  // mascot celebration on first note in session
+  if (notes.length === 0) {
+    setTimeout(() => {
+      showToast('🥔 Welcome to SpudNotes by DS & Jay!');
+    }, 600);
+  }
+
+  // periodic snapshot of active note
+  setInterval(() => {
+    const cur = getActive();
+    if (cur && (cur.body || cur.title)) snapshotNote(cur);
+  }, 60000);
+})();
+
+})();
+</script>
+</body>
+</html>
